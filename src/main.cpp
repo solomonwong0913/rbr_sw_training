@@ -67,7 +67,7 @@ static bool isAppsFaulty(int apps5v, int apps3v3) {
   apps3v3 = constrain(apps3v3, 0, 1023);
 
   // Bring 3.3V reading up to 5V scale
-  int32_t scaled3v3 = (int32_t)apps3v3 * 1023 / 675;
+  int32_t scaled3v3 = (int32_t)apps3v3 * 1023 / 675; // 3.3V * 1023 / 675 ≈ 5V
 
   int32_t diff = abs(apps5v - scaled3v3);
   int32_t max = (apps5v > scaled3v3) ? apps5v : scaled3v3;
