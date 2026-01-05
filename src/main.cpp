@@ -51,12 +51,12 @@ static unsigned long stateTimestamp = 0;
 static void setState(VcuState s) {
   vcuState = s;
   stateTimestamp = millis();
-  Serial.print("[VCU] setState: ");
+  // Serial.print("[VCU] setState: ");
   switch (s) {
-    case INIT: Serial.println("INIT"); break;
-    case STARTIN: Serial.println("STARTIN"); break;
-    case BUZZIN: Serial.println("BUZZIN"); break;
-    case DRIVE: Serial.println("DRIVE"); break;
+    case INIT: /*Serial.println("INIT");*/ break;
+    case STARTIN: /*Serial.println("STARTIN");*/ break;
+    case BUZZIN: /*Serial.println("BUZZIN");*/ break;
+    case DRIVE: /*Serial.println("DRIVE");*/ break;
   }
 }
 
@@ -71,7 +71,7 @@ static bool isAppsFaulty(int apps5v, int apps3v3) {
 
   int32_t diff = abs(apps5v - scaled3v3);
   int32_t max = (apps5v > scaled3v3) ? apps5v : scaled3v3;
-  
+
   return (diff * APPS_MAX_DISAGREE_RATIO > max);
 }
 
@@ -97,12 +97,12 @@ static int16_t convertMotorTorque(int apps5v) {
 static void setMotorTorque(int16_t torque) {
   if (currentTorque == torque) return;
   currentTorque = torque;
-  Serial.print("[VCU] Motor torque set: ");
+  // Serial.print("[VCU] Motor torque set: ");
   Serial.println((long)torque);
 }
 
 void setup() {
-  Serial.begin(115200);
+  // Serial.begin(115200);
 
   // set MCP2515 CS pins
   pinMode(MCP2515_MOTOR_CS, OUTPUT);
@@ -129,7 +129,7 @@ void setup() {
   digitalWrite(BUZZER_PIN, LOW);
 
   // initialise state timestamp placeholder
-  Serial.println("[VCU] Pins initialised");
+  // Serial.println("[VCU] Pins initialised");
   // set initial state timestamp
   stateTimestamp = millis();
 }
@@ -207,13 +207,13 @@ void loop() {
         if (!appsFaulty) {
           appsFaulty = true;
           appsFaultStartTime = now;
-          Serial.println("[VCU] APPS Faulty detected");
+          // Serial.println("[VCU] APPS Faulty detected");
           break;
         }
 
         // check timeout
         if (now - appsFaultStartTime >= APPS_FAULT_TIMEOUT_MS) {
-          Serial.println("[VCU] APPS Fault condition triggered, going to INIT");
+          // Serial.println("[VCU] APPS Fault condition triggered, going to INIT");
           setMotorTorque(0);
           digitalWrite(DRIVE_LED_PIN, LOW);
           setState(INIT);
@@ -224,7 +224,7 @@ void loop() {
       } else {
         if (appsFaulty) {
           appsFaulty = false;
-          Serial.println("[VCU] APPS Faulty cleared");
+          // Serial.println("[VCU] APPS Faulty cleared");
         }
       }
 
