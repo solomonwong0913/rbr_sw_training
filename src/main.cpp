@@ -147,10 +147,7 @@ void loop() {
 
   switch (vcuState) {
     case INIT:
-      // make the motor output be zero
       setMotorTorque(0);
-
-      // ensure indicator outputs are off in INIT
       digitalWrite(DRIVE_LED_PIN, LOW);
       digitalWrite(BUZZER_PIN, LOW);
 
@@ -161,11 +158,10 @@ void loop() {
       break;
 
     case STARTIN:
-      // make the motor output be zero
       setMotorTorque(0);
 
       // monitor start button + brake, 
-      // to decide whether to stay or go back to INIT
+      // go back to INIT if either released
       if (!startPressed || !brakeDepressed) {
         setState(INIT);
         break;
@@ -178,18 +174,13 @@ void loop() {
       break;
 
     case BUZZIN:
-      // set the buzzer on
+      setMotorTorque(0);
       digitalWrite(BUZZER_PIN, HIGH);
 
-      // after 2 seconds, move to DRIVE
+      // after 2 seconds, go to DRIVE
       if (now - stateTimestamp >= BUZZIN_TIME) {
-        // set the buzzer off
         digitalWrite(BUZZER_PIN, LOW);
-
-        // move to DRIVE state
         setState(DRIVE);
-
-        // set the drive mode LED on
         digitalWrite(DRIVE_LED_PIN, HIGH);
       }
       break;
